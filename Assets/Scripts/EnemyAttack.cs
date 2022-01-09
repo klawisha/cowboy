@@ -16,6 +16,10 @@ Vector3 hitPos;
 
     void Update()
     {
+        if(!FindTarget())
+            return;
+
+
        inFront();
        haveLineOfSight();
        if(inFront() && haveLineOfSight())
@@ -47,7 +51,6 @@ Vector3 hitPos;
         {
             if(hit.transform.CompareTag("Player"))
             {
-                Debug.Log("Hit the " + hit.transform.name);
                 hitPos = hit.transform.position;
                 return true;
             }
@@ -57,7 +60,23 @@ Vector3 hitPos;
 
     void FireLaser()
     {
-        laser.FireLaserPos(hitPos);
+        laser.FireLaserPos(hitPos, target);
+    }
+
+   bool FindTarget()
+    {
+        if(target == null)
+        {
+            GameObject temp =  GameObject.FindGameObjectWithTag("Player");
+            if(temp != null)
+                target = temp.transform;
+        }
+    
+
+        if(target == null)
+            return false;
+
+        return true;
     }
 
 }

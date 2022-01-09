@@ -21,9 +21,29 @@ public class FollowCam : MonoBehaviour
 
 
 
+   bool FindTarget()
+    {
+        if(target == null)
+        {
+            GameObject temp =  GameObject.FindGameObjectWithTag("Player");
+            if(temp != null)
+                target = temp.transform;
+        }
+
+
+        if(target == null)
+            return false;
+
+        return true;
+    }
+
 
 
    void LateUpdate() {
+       if(!FindTarget())
+           return;
+
+
        SmoothFollow();
     //    Vector3 toPos = target.position + (target.rotation * defDistanceToTarget);
     //    Vector3 curPos = Vector3.Lerp(myT.position, toPos, distanceDamp * Time.deltaTime);

@@ -36,20 +36,28 @@ Vector3 CastRay()
 
     if(Physics.Raycast(transform.position, fwd, out hit))
     {
-       Explosion temp = hit.transform.GetComponent<Explosion>();
-        if(temp != null)
-            temp.IveBeenHit(hit.point);
+        SpawnExplosion(hit.point, hit.transform);
         return hit.point;
     }
     return transform.position + (transform.forward * maxDist);
 }
 
+void SpawnExplosion(Vector3 hitPos, Transform target)
+{
+ Explosion temp = target.GetComponent<Explosion>();
+        if(temp != null){
+            temp.IveBeenHit(hitPos);
+            temp.AddForce(hitPos, transform);
+        }
+}
 
 
 public void FireLaser()
 {
+    /*
     if(canFire)
     {
+
     lr.SetPosition(0, transform.position);
     lr.SetPosition(1, CastRay());
     lr.enabled = true;
@@ -57,13 +65,19 @@ public void FireLaser()
     canFire = false;
     Invoke("TurnOffLaser", laserOnTime);
     Invoke("CanFire", reload);
-    }
+    }*/
+    Vector3 pos = CastRay();
+    FireLaserPos(pos);
 }
 
-public void FireLaserPos(Vector3 targetPos)
+public void FireLaserPos(Vector3 targetPos, Transform target = null)
 {
     if(canFire)
     {
+    if(target != null)
+    {
+        SpawnExplosion(targetPos, target);
+    }
     lr.SetPosition(0, transform.position);
     lr.SetPosition(1, targetPos);
     lr.enabled = true;

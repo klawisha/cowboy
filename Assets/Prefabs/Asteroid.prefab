@@ -126,3 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosion: {fileID: 6601103881616726210, guid: 40d3933176fe3414a99c321c0fb3dee9, type: 3}
+  rb: {fileID: 0}
+  laserHitModifier: 100
+  shield: {fileID: 0}
+  blowup: {fileID: 100008, guid: 1dbc518224e49f34095aab42fe05751a, type: 3}

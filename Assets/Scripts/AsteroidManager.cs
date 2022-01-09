@@ -8,11 +8,27 @@ public class AsteroidManager : MonoBehaviour
     [SerializeField] int gridSpacing = 90;
     [SerializeField] int numOfAsteroidsPerAxis = 10;
 
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]GameObject pickupPref;
+
+   public List<Asteroid> asteroids = new List<Asteroid>();
+
+
+    void OnEnable()
     {
-        PlaceAsteroids();
+        EventManager.onStartGame += PlaceAsteroids;
+        EventManager.onPlayerDeath += DestroyAsteroids;
     }
+
+    void OnDisable()
+    {
+        EventManager.onStartGame -= PlaceAsteroids;
+        EventManager.onPlayerDeath -= DestroyAsteroids;
+    }
+
+   // void Start()
+    //{
+     //   PlaceAsteroids();
+    //}
 
     void PlaceAsteroids()
     {
@@ -25,17 +41,38 @@ public class AsteroidManager : MonoBehaviour
                     InstantiateAsteroid(i, j, v);
                 }
             }
+        PlacePickUps();
         }
 
     }
 
+    void PlacePickUps()
+    {
+        int rnd = Random.Range(0, asteroids.Count);
+
+
+        Instantiate(pickupPref,asteroids[rnd].transform.position, Quaternion.identity);
+        Destroy(asteroids[rnd].gameObject);
+        asteroids.RemoveAt(rnd);
+    }
+
+
     void InstantiateAsteroid(int x, int y, int z)
     {
-        Instantiate(asteroid, 
+        Asteroid ast = Instantiate(asteroid,
         new Vector3(transform.position.x + x * gridSpacing + AsteroidOffset(),
-                    transform.position.y + y * gridSpacing + AsteroidOffset(), 
-                    transform.position.z + z * gridSpacing + AsteroidOffset()), 
-         Quaternion.identity, transform);
+                    transform.position.y + y * gridSpacing + AsteroidOffset(),
+                    transform.position.z + z * gridSpacing + AsteroidOffset()),
+         Quaternion.identity, transform) as Asteroid;
+        asteroids.Add(ast);
+    }
+
+    void DestroyAsteroids()
+    {
+      // foreach(Asteroid a in asteroids)
+       //    a.SelfDestruct();
+
+        asteroids.Clear();
     }
 
 
@@ -48,6 +85,5 @@ public class AsteroidManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 }
